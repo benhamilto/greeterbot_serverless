@@ -1,2 +1,2 @@
 # greeterbot_serverless
-Recreating greeterbot API using the Serverless framework and AWS Lambdas
+Recreating my greeterbot project using the Serverless framework and AWS Lambdas
