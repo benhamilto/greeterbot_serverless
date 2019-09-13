@@ -1,0 +1,24 @@
+{
+  "name": "greeterbot_serverless",
+  "version": "1.0.0",
+  "description": "Recreating my greeterbot project using the Serverless framework and AWS Lambdas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benhamilto/greeterbot_serverless.git"
+  },
+  "author": "Ben Hamilton",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benhamilto/greeterbot_serverless/issues"
+  },
+  "homepage": "https://github.com/benhamilto/greeterbot_serverless#readme",
+  "devDependencies": {
+    "serverless-dynamodb-local": "^0.2.38",
+    "serverless-offline-python": "^3.22.1",
+    "serverless-python-requirements": "^5.0.0"
+  }
+}
