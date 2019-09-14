@@ -2,38 +2,66 @@ service: greeterbot-serverless
 app: greeterbot
 org: benhamilto
 
+custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+
 provider:
   name: aws
-  runtime: python3.7
+  runtime: python3.6
   environment:
-    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    DYNAMODB_MESSAGES_TABLE: ${self:service}-${opt:stage, self:provider.stage}
   iamRoleStatements:
     - Effect: Allow
       Action:
+        - dynamodb:DescribeTable
         - dynamodb:Query
         - dynamodb:Scan
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_MESSAGES_TABLE}"
 
 functions:
   create:
     handler: messages/create.create
     events:
       - http:
-          path: /messages
+          path: messages
           method: post
+          cors: true
+  get:
+    handler: messages/get.get
+    events:
+      - http:
+          path: messages/{id}
+          method: get
+          cors: true
+  list:
+    handler: messages/list.list
+    events:
+      - http:
+          path: messages
+          method: get
           cors: true
 
 plugins:
-  - serverless-offline-python
   - serverless-python-requirements
   - serverless-dynamodb-local
+  - serverless-offline-python
 resources:
   Resources:
-    TodosDynamoDbTable:
+    MessagesDynamoDbTable:
       Type: "AWS::DynamoDB::Table"
       DeletionPolicy: Retain
       Properties:
@@ -46,4 +74,4 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        TableName: ${self:provider.environment.DYNAMODB_MESSAGES_TABLE}
